@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: random_pick
+    relative_path: urdf/ur5_plus/ur5_hitbot_ilc_platform.urdf.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/ur5_hitbot_with_ilc_platform.srdf
+  CONFIG:
+    author_name: Yu Yan
+    author_email: yu.yan@intel.com
+    generated_timestamp: 1548137414
