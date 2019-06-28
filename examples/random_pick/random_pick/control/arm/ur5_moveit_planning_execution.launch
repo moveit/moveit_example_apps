@@ -1,0 +1,24 @@
+<launch>
+  <arg name="sim" default="false" />
+  <arg name="debug" default="false" />
+    
+  <!-- Remap follow_joint_trajectory -->
+  <remap if="$(arg sim)" from="ur5_arm_controller/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
+  <remap unless="$(arg sim)" from="ur5_arm_controller/follow_joint_trajectory" to="/follow_joint_trajectory"/>
+
+  <!-- Remap gripper_cmd -->
+  <remap if="$(arg sim)" from="ur5_hand_controller/gripper_cmd" to="gripper_controller/gripper_cmd"/>
+  <remap unless="$(arg sim)" from="ur5_hand_controller/gripper_cmd" to="/gripper_cmd"/>
+  
+  <!-- Launch moveit -->
+  <include file="$(find ur5_hitbot_ilc_platform_moveit_config)/launch/move_group.launch">
+    <arg name="debug" default="$(arg debug)" />
+  </include>
+
+  <!-- Run Rviz and load the default config to see the state of the move_group node -->
+  <include file="$(find ur5_hitbot_ilc_platform_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+</launch>

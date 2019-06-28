@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>  
+  
+  <arg name="gripper" default="true"/>
+
+  <param if="$(arg gripper)" name="robot_description" 
+         command="$(find xacro)/xacro --inorder 
+                  $(find random_pick)/urdf/ur5_plus/ur5_hitbot_ilc_platform.urdf.xacro" />
+
+  <param unless="$(arg gripper)" name="robot_description" 
+         command="$(find xacro)/xacro --inorder 
+                  $(find random_pick)/urdf/ur5_plus/ur5_ilc_platform.urdf.xacro" />                  
+
+</launch>
