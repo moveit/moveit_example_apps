@@ -437,7 +437,7 @@ int main(int argc, char **argv) {
   moveit_msgs::Grasp grasp;
   gpd::GraspConfig gpd_grasp;
   geometry_msgs::Pose obj_pose;
-  while (ros::ok) {
+  while (ros::ok()) {
     while (grasp_candidates.empty()) {
       ros::WallDuration(0.1).sleep();
     }
