@@ -1,0 +1,11 @@
+# vscode files
+.vscode
+.vsdx
+
+# rosdoc files
+build
+.build
+_build
+
+# ROS files
+.swp
