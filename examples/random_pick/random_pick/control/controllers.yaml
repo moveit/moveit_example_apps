@@ -1,0 +1,19 @@
+controller_list:
+  - name: "ur5_arm_controller"
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+
+  - name: "ur5_hand_controller"
+    action_ns: gripper_cmd
+    type: GripperCommand
+    default: true
+    joints:
+      - hitbot_base_finger0_joint
+      - hitbot_base_finger1_joint

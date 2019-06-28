@@ -1,0 +1,12 @@
+<launch>
+  <arg name="sim" default="false"/>
+
+  <group if="$(arg sim)">
+    <node name="hitbot_driver" pkg="random_pick" type="gripper_server.py" required="true" args="--sim"/>
+  </group>
+
+  <group unless="$(arg sim)">
+    <node name="hitbot_driver" pkg="random_pick" type="gripper_server.py" required="true"/>
+  </group>
+
+</launch>
