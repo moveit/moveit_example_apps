@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+  <name>random_pick</name>
+  <version>0.1.0</version>
+  <description>Random pick application using MoveIt Grasp Library plug-in</description>
+  <license>BSD</license>
+
+  <author email="sharron.liu@intel.com">Sharron Liu</author>
+  <maintainer email="sharron.liu@intel.com">Sharron Liu</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>pluginlib</build_depend>
+  <build_depend>eigen</build_depend>
+  <build_depend>moveit_core</build_depend>
+  <build_depend>moveit_ros_planning_interface</build_depend>
+  <build_depend>geometric_shapes</build_depend>
+  <build_depend>moveit_visual_tools</build_depend>
+  <build_depend>tf2_ros</build_depend>
+  <build_depend>tf2_eigen</build_depend>
+  <build_depend>tf2_geometry_msgs</build_depend>
+  <build_depend>gpd</build_depend>
+
+  <run_depend>pluginlib</run_depend>
+  <run_depend>moveit_core</run_depend>
+  <run_depend>moveit_commander</run_depend>
+  <run_depend>moveit_fake_controller_manager</run_depend>
+  <run_depend>moveit_ros_planning_interface</run_depend>
+  <run_depend>moveit_visual_tools</run_depend>
+  <run_depend>tf2_ros</run_depend>
+  <run_depend>tf2_eigen</run_depend>
+  <run_depend>tf2_geometry_msgs</run_depend>
+  <run_depend>gpd</run_depend>
+
+</package>
