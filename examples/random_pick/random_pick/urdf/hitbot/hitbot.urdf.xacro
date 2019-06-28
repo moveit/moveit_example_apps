@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="hitbot" >
+
+  <xacro:arg name="gazebo" default="true"/>
+  <xacro:if value="$(arg gazebo)">
+    <!-- Gazebo Tags -->
+    <xacro:include filename="$(find random_pick)/urdf/hitbot/hitbot.gazebo.xacro"/>
+  </xacro:if>
+
+  <!-- base -->
+  <link name="hitbot_base">
+    <inertial>
+      <mass value="0.73" />
+      <origin xyz="0 0.0015244 0.0275912" rpy="0 0 0" />
+      <inertia ixx="0.00278560230025" ixy="0.0" ixz="0.0" iyy="0.000400033405336" iyz="0.0" izz="0.00256378041832" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/base.stl"/>
+      </geometry>
+      <material name="steel">
+        <color rgba="0.2 0.2 0.2 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/base.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- mask -->
+  <link name="hitbot_mask">
+    <inertial>
+      <mass value="0.1" />
+      <origin xyz="0 0.0015244 0.0275912" rpy="0 0 0" />
+      <inertia ixx="0.003" ixy="0.0" ixz="0.0" iyy="0.003" iyz="0.0" izz="0.003" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/mask.stl"/>
+      </geometry>
+      <material name="plastic">
+        <color rgba="0.95 0.95 0.95 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+	<mesh filename="package://random_pick/urdf/meshes/mask.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="hitbot_base_mask_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.006"/>
+    <parent link="hitbot_base"/>
+    <child link="hitbot_mask"/>
+  </joint>
+
+  <!-- finger 0 -->
+  <link name="hitbot_finger0">
+    <inertial>
+      <mass value="0.1" />
+      <origin xyz="0 0.0145644 0.0227941" rpy="0 0 0" />
+      <inertia ixx="3.01220925051e-05" ixy="0.0" ixz="0.0" iyy="2.95873808038e-05" iyz="0.0" izz="6.95125211657e-06" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/finger.stl"/>
+      </geometry>
+      <material name="aluminum">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/finger.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="hitbot_base_finger0_joint" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 -0.010 0.114"/>
+    <parent link="hitbot_base"/>
+    <child link="hitbot_finger0"/>
+    <axis xyz="0 1 0"/>
+    <limit upper="0" lower="-0.010" effort="30" velocity="0.01"/>
+  </joint>
+
+  <!-- finger 0 tip -->
+  <link name="hitbot_finger0_tip">
+    <inertial>
+      <mass value="0.1" />
+      <origin xyz="0 0.0145644 0.0227941" rpy="0 0 0" />
+      <inertia ixx="3.01220925051e-05" ixy="0.0" ixz="0.0" iyy="2.95873808038e-05" iyz="0.0" izz="6.95125211657e-06" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/finger_tip.stl"/>
+      </geometry>
+      <material name="steel">
+        <color rgba="0.2 0.2 0.2 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/finger_tip.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="hitbot_finger0_tip_joint" type="fixed">
+    <origin rpy="-${pi/2} 0 ${pi}" xyz="0 0 0.01"/>
+    <parent link="hitbot_finger0"/>
+    <child link="hitbot_finger0_tip"/>
+  </joint>
+
+  <!-- finger 1 -->
+  <link name="hitbot_finger1">
+    <inertial>
+      <mass value="0.1" />
+      <origin xyz="0 0.0145644 0.0227941" rpy="0 0 ${pi}" />
+      <inertia ixx="3.01220925051e-05" ixy="0.0" ixz="0.0" iyy="2.95873808038e-05" iyz="0.0" izz="6.95125211657e-06" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/finger.stl"/>
+      </geometry>
+      <material name="aluminum">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/finger.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="hitbot_base_finger1_joint" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 0.004 0.114"/>
+    <parent link="hitbot_base"/>
+    <child link="hitbot_finger1"/>
+    <axis xyz="0 1 0"/>
+    <limit upper="0.010" lower="0" effort="30" velocity="0.01"/>
+  </joint>
+
+  <!-- finger 0 tip -->
+  <link name="hitbot_finger1_tip">
+    <inertial>
+      <mass value="0.1" />
+      <origin xyz="0 0.0145644 0.0227941" rpy="0 0 0" />
+      <inertia ixx="3.01220925051e-05" ixy="0.0" ixz="0.0" iyy="2.95873808038e-05" iyz="0.0" izz="6.95125211657e-06" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/finger_tip.stl"/>
+      </geometry>
+      <material name="steel">
+        <color rgba="0.2 0.2 0.2 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://random_pick/urdf/meshes/finger_tip.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="hitbot_finger1_tip_joint" type="fixed">
+    <origin rpy="-${pi/2} 0 0" xyz="0 0.0055 0.01"/>
+    <parent link="hitbot_finger1"/>
+    <child link="hitbot_finger1_tip"/>
+  </joint>
+
+</robot>

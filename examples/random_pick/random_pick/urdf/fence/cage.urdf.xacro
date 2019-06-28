@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!-- BSD 3-Clause License
+
+Copyright (c) 2019, Intel Corporation
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
+
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="cage">
+  
+  <!-- fence macro -->
+  <xacro:macro name="cage" params="connected_to=''
+                                   fence_thickness:=0.01
+                                   fence_left_dist:=0.5
+                                   fence_right_dist:=0.5
+                                   fence_front_dist:=0.8
+                                   fence_back_dist:=0.6
+                                   fence_top_height:=1.75
+                                   fence_transparent:=0.3">
+
+    <!-- fences -->
+    <xacro:include filename="$(find random_pick)/urdf/fence/fence.urdf.xacro" />
+    <xacro:fence prefix="left" 
+                 x="${fence_thickness}" 
+                 y="${fence_front_dist+fence_back_dist}" 
+                 z="${fence_top_height}"
+                 connected_to="${connected_to}"
+                 color="1.0 0.5 0.5 ${fence_transparent}"
+                 xyz="${fence_left_dist} 
+                      ${fence_back_dist-(fence_front_dist+fence_back_dist)/2} 
+                      ${fence_top_height/2}"/>
+
+    <xacro:fence prefix="right" 
+                 x="${fence_thickness}" 
+                 y="${fence_front_dist+fence_back_dist}" 
+                 z="${fence_top_height}"
+                 connected_to="${connected_to}"
+                 color="1.0 0.5 0.5 ${fence_transparent}"
+                 xyz="-${fence_right_dist} 
+                       ${fence_back_dist-(fence_front_dist+fence_back_dist)/2} 
+                       ${fence_top_height/2}"/>
+
+    <xacro:fence prefix="front" 
+                 x="${fence_left_dist+fence_right_dist}" 
+                 y="${fence_thickness}" 
+                 z="${fence_top_height}"
+                 connected_to="${connected_to}"
+                 color="1.0 0.5 0.5 ${fence_transparent}"
+                 xyz="${fence_left_dist-(fence_left_dist+fence_right_dist)/2}
+                     -${fence_front_dist} 
+                      ${fence_top_height/2}"/>
+
+    <xacro:fence prefix="back" 
+                 x="${fence_left_dist+fence_right_dist}" 
+                 y="${fence_thickness}" 
+                 z="${fence_top_height}"
+                 connected_to="${connected_to}"
+                 color="1.0 0.5 0.5 ${fence_transparent}"
+                 xyz="${fence_left_dist-(fence_left_dist+fence_right_dist)/2}
+                      ${fence_back_dist} 
+                      ${fence_top_height/2}"/>
+
+    <xacro:fence prefix="top" 
+                 x="${fence_left_dist+fence_right_dist}" 
+                 y="${fence_front_dist+fence_back_dist}" 
+                 z="${fence_thickness}"
+                 connected_to="${connected_to}"
+                 color="1.0 0.5 0.5 ${fence_transparent}"
+                 xyz="${fence_left_dist-(fence_left_dist+fence_right_dist)/2}
+                      ${fence_back_dist-(fence_front_dist+fence_back_dist)/2}
+                      ${fence_top_height}"/>
+
+  </xacro:macro>
+
+</robot>

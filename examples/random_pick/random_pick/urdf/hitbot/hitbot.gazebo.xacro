@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="hitbot_gazebo">
+
+	<gazebo reference="hitbot_base"><material>Gazebo/Black</material></gazebo>
+	<gazebo reference="hitbot_mask"></gazebo>
+	<gazebo reference="hitbot_finger0"><material>Gazebo/Grey</material></gazebo>
+	<gazebo reference="hitbot_finger1"><material>Gazebo/Grey</material></gazebo>
+
+	<transmission name="hitbot_finger_joint1_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="hitbot_base_finger0_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="hitbot_finger_joint1_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="hitbot_finger_joint2_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="hitbot_base_finger1_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="hitbot_finger_joint2_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Gazebo grasping plugin -->
+  <gazebo>
+    <gripper name="gazebo_gripper">
+      <grasp_check>
+        <attach_steps>2</attach_steps>    <!-- default: 20 -->
+        <detach_steps>2</detach_steps>    <!-- default: 40 -->
+        <min_contact_count>2</min_contact_count>
+      </grasp_check>
+      <gripper_link>hitbot_finger0</gripper_link>
+      <gripper_link>hitbot_finger1</gripper_link>
+      <palm_link>hitbot_base</palm_link>
+    </gripper>
+  </gazebo>
+
+</robot>

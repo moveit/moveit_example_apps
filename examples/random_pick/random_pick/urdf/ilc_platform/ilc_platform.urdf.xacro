@@ -1,0 +1,416 @@
+<?xml version="1.0"?>
+<!-- BSD 3-Clause License
+
+Copyright (c) 2019, Intel Corporation
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
+
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="platform">
+  
+  <!-- Platform parameters -->
+  <xacro:macro name="platform" params="platform_height:='0.32' 
+                                       platform_width:='0.7' 
+                                       platform_length:='0.98'
+                                       connected_to:=''
+                                       xyz:='0 0 0' 
+                                       rpy:='0 0 0'
+                                       up_beam:='false'
+                                       fence_left_dist:=0.5
+                                       fence_right_dist:=0.5
+                                       fence_front_dist:=0.8
+                                       fence_back_dist:=0.6
+                                       fence_top_height:=1.75
+                                       fence_transparent:=0.3">
+
+    <!-- param for beam 80X80 -->
+    <xacro:property name="width" value="0.08"/>
+    <!-- param for beam 80X40 -->
+    <xacro:property name="thickness" value="0.04"/>
+    <!-- distance of beam from ground -->
+    <xacro:property name="platform_lift" value="0.075"/>
+    <!-- thickness of fence -->
+    <xacro:property name="fence_thickness" value="0.01"/>
+
+    <xacro:unless value="${not connected_to}">
+      <joint name="${connected_to}_platform_joint" type="fixed">
+        <parent link="${connected_to}"/>
+        <child link="platform_base"/>
+        <origin rpy="${rpy}" xyz="${xyz}"/>
+      </joint>
+    </xacro:unless>
+
+    <link name="platform_base" />
+
+    <!-- fences -->
+    <xacro:include filename="$(find random_pick)/urdf/fence/cage.urdf.xacro" />
+    <xacro:cage connected_to="platform_base"
+                fence_thickness="${fence_thickness}"
+                fence_left_dist="${fence_left_dist}"
+                fence_right_dist="${fence_right_dist}"
+                fence_front_dist="${fence_front_dist}" 
+                fence_back_dist="${fence_back_dist}"
+                fence_top_height="${fence_top_height}"
+                fence_transparent="${fence_transparent}"/>
+
+    <!-- beam_support macro -->
+    <xacro:macro name="beam_support" params="prefix:='' xyz:='0 0 0' rpy:='0 0 0' z=''">
+      <link name="beam_support_${prefix}">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <box size="${width} ${width} ${z}" />
+          </geometry>
+          <material name="grey_blue">
+            <color rgba="0.3 0.3 0.7 1.0"/>
+          </material>
+        </visual>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <box size="${width} ${width} ${z}" />
+          </geometry>
+        </collision>
+      </link>
+      <joint name="platform_base_beam_support_${prefix}_joint" type="fixed">
+        <parent link="platform_base" />
+        <child link = "beam_support_${prefix}" />
+        <origin xyz="${xyz}" 
+                rpy="${rpy}" />
+      </joint>
+      <!-- Individual link colouring still needed in Gazebo 2.x -->
+      <gazebo reference="beam_support_${prefix}"><material>Gazebo/Blue</material></gazebo>
+    </xacro:macro>
+
+    <!-- beam macro -->
+    <xacro:macro name="beam" params="prefix:='' xyz:='0 0 0' rpy:='0 0 0' x:='0.0' y:='0.0'">
+      <link name="beam_${prefix}">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <box size="${x} ${y} ${thickness}" />
+          </geometry>
+          <material name="dark_grey">
+            <color rgba="0.7 0.7 0.7 1.0"/>
+          </material>
+        </visual>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <box size="${x} ${y} ${thickness}" />
+          </geometry>
+        </collision>
+      </link>
+      <joint name="platform_base_beam_${prefix}_joint" type="fixed">
+        <parent link="platform_base" />
+        <child link = "beam_${prefix}" />
+        <origin xyz="${xyz}" 
+                rpy="${rpy}" />
+      </joint>
+      <!-- Individual link colouring still needed in Gazebo 2.x -->
+      <gazebo reference="beam_${prefix}"><material>Gazebo/Grey</material></gazebo>
+    </xacro:macro>
+
+    <!-- beam_support_front_right link -->
+    <xacro:beam_support prefix="front_right"
+                        xyz="${-(platform_width / 2) + (width /2)} 
+                            ${-(platform_length / 2) - (width /2)} 
+                            ${platform_lift + thickness + (platform_height / 2)}"
+                        rpy="0.0 0.0 0.0"
+                        z="${platform_height}">
+    </xacro:beam_support>
+
+    <!-- beam_support_front_left link -->
+    <xacro:beam_support prefix="front_left" 
+                        xyz="${(platform_width / 2) - (width /2)} 
+                            ${-(platform_length / 2) - (width /2)} 
+                            ${platform_lift + thickness + (platform_height / 2)}"
+                        rpy="0.0 0.0 0.0"
+                        z="${platform_height}">
+    </xacro:beam_support>
+
+    <!-- beam_support_back_right link -->
+    <xacro:beam_support prefix="back_right"
+                        xyz="${-(platform_width / 2) + (width /2)} 
+                            ${(platform_length / 2) + (width /2)} 
+                            ${platform_lift + thickness + (platform_height / 2)}"
+                        rpy="0.0 0.0 0.0"
+                        z="${platform_height}">
+    </xacro:beam_support>
+
+    <!-- beam_support_back_left link -->
+    <xacro:beam_support prefix="back_left"
+                        xyz="${(platform_width / 2) - (width /2)} 
+                            ${(platform_length / 2) + (width /2)} 
+                            ${platform_lift + thickness + (platform_height / 2)}"
+                        rpy="0.0 0.0 0.0"
+                        z="${platform_height}">
+    </xacro:beam_support>
+
+    <!-- beam_support_robot_bottom link -->
+    <xacro:beam_support prefix="robot_bottom"
+                        xyz="0.0 
+                            ${(platform_length / 2) -0.225 - (width /2)} 
+                            ${platform_lift + thickness + (platform_height / 2)}"
+                        rpy="0.0 0.0 0.0"
+                        z="${platform_height}">
+    </xacro:beam_support>
+
+    <!-- beam_support_robot_top link -->
+    <xacro:beam_support prefix="robot_top"
+                        xyz="0.0 
+                            ${(platform_length / 2) -0.225 - (width /2)} 
+                            ${platform_lift + platform_height + (thickness * 2) + (0.15 / 2)}"
+                        rpy="0.0 0.0 0.0"
+                        z="0.15">
+    </xacro:beam_support>
+
+    <!-- beam_middle_bottom link -->
+    <xacro:beam prefix="middle_bottom"
+                      xyz="0.0 0.0 ${platform_lift + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${width}"
+                      y="${platform_length}">
+    </xacro:beam>
+
+    <!-- beam_middle_top link -->
+    <xacro:beam prefix="middle_top"
+                      xyz="0.0 0.0 ${platform_lift + thickness + platform_height + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${width}"
+                      y="${platform_length}">
+    </xacro:beam>
+
+    <!-- beam_left_bottom link -->
+    <xacro:beam prefix="left_bottom"
+                      xyz="${(platform_width / 2) - (width / 2)} 
+                          0.0 
+                          ${platform_lift + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${width}"
+                      y="${platform_length}">
+    </xacro:beam>
+
+    <!-- beam_left_top link -->
+    <xacro:beam prefix="left_top"
+                      xyz="${(platform_width / 2) - (width / 2)} 
+                          0.0 
+                          ${platform_lift + thickness + platform_height + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${width}"
+                      y="${platform_length}">
+    </xacro:beam>
+
+    <!-- beam_right_bottom link -->
+    <xacro:beam prefix="right_bottom"
+                      xyz="${-(platform_width / 2) + (width / 2)} 
+                          0.0 
+                          ${platform_lift + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${width}"
+                      y="${platform_length}">
+    </xacro:beam>
+
+    <!-- beam_right_top link -->
+    <xacro:beam prefix="right_top"
+                      xyz="${-(platform_width / 2) + (width / 2)} 
+                          0.0 
+                          ${platform_lift + thickness + platform_height + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${width}"
+                      y="${platform_length}">
+    </xacro:beam>
+
+    <!-- beam_front_bottom link -->
+    <xacro:beam prefix="front_bottom"
+                      xyz="0.0
+                          ${-(platform_length / 2) - (width / 2)} 
+                          ${platform_lift + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${platform_width}"
+                      y="${width}">
+    </xacro:beam>
+
+    <!-- beam_front_top link -->
+    <xacro:beam prefix="front_top"
+                      xyz="0.0
+                          ${-(platform_length / 2) - (width / 2)} 
+                          ${platform_lift + thickness + platform_height + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${platform_width}"
+                      y="${width}">
+    </xacro:beam>
+
+    <!-- beam_back_bottom link -->
+    <xacro:beam prefix="back_bottom"
+                      xyz="0.0
+                          ${(platform_length / 2) + (width / 2)} 
+                          ${platform_lift + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${platform_width }"
+                      y="${width}">
+    </xacro:beam>
+
+    <!-- beam_back_top link -->
+    <xacro:beam prefix="back_top"
+                      xyz="0.0
+                          ${(platform_length / 2) + (width / 2)} 
+                          ${platform_lift + thickness + platform_height + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${platform_width}"
+                      y="${width}">
+    </xacro:beam>
+
+    <!-- beam_connect_left_bottom link -->
+    <xacro:beam prefix="connect_left_bottom"
+                      xyz="${platform_width / 4 - (width * 1.5) / 2 + (width * 0.5)}
+                          0.0
+                          ${platform_lift + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${platform_width / 2 - (width * 1.5)}"
+                      y="${width}">
+    </xacro:beam>
+
+    <!-- beam_connect_left_top link -->
+    <xacro:beam prefix="connect_left_top"
+                      xyz="${platform_width / 4 - (width * 1.5) / 2 + (width * 0.5)}
+                          0.0
+                          ${platform_lift + thickness + platform_height + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${platform_width / 2 - (width * 1.5)}"
+                      y="${width}">
+    </xacro:beam>
+
+    <!-- beam_connect_right_bottom link -->
+    <xacro:beam prefix="connect_right_bottom"
+                      xyz="${-platform_width / 4 + (width * 1.5) / 2 - (width * 0.5)}
+                          0.0
+                          ${platform_lift + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${platform_width / 2 - (width * 1.5)}"
+                      y="${width}">
+    </xacro:beam>
+
+    <!-- beam_connect_right_top link -->
+    <xacro:beam prefix="connect_right_top"
+                      xyz="${-platform_width / 4 + (width * 1.5) / 2 - (width * 0.5)}
+                          0.0
+                          ${platform_lift + thickness + platform_height + (thickness / 2)}"
+                      rpy="0.0 0.0 0.0"
+                      x="${platform_width / 2 - (width * 1.5)}"
+                      y="${width}">
+    </xacro:beam>
+
+    <xacro:if value="${up_beam == 'true'}">
+      <!-- beam_camera_vertical link -->
+      <xacro:beam prefix="camera_vertical"
+                        xyz="${-(platform_width / 2) + (width / 2)} 
+                            ${(platform_length / 2) + (width / 2) + (thickness / 2)} 
+                            ${platform_lift + (thickness * 2) + platform_height + (1.0 / 2)}"
+                        rpy="${pi / 2} 0.0 0.0"
+                        x="${width}"
+                        y="1.0">
+      </xacro:beam>
+
+      <!-- beam_camera_horizontal link -->
+      <xacro:beam prefix="camera_horizontal"
+                        xyz="${-(platform_width / 2) + (width / 2)} 
+                            ${(platform_length / 2) + (width / 2) - (0.8 / 2)} 
+                            ${platform_lift + (thickness * 2) + platform_height + 1.0 - (thickness / 2)}"
+                        rpy="0.0 0.0 0.0"
+                        x="${width}"
+                        y="0.8">
+      </xacro:beam>
+
+      <!-- beam_camera_tilt link -->
+      <xacro:beam prefix="camera_tilt"
+                        xyz="${-(platform_width / 2) + (width / 2)} 
+                            0.285 
+                            ${platform_lift + (thickness * 2) + platform_height + 0.85 - (thickness / 2)}"
+                        rpy="-${pi / 6} 0.0 0.0"
+                        x="${width}"
+                        y="0.59">
+      </xacro:beam>
+    </xacro:if>
+
+    <link name="operation_surface">
+      <visual>
+        <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.7 0.6 0.025" />
+        </geometry>
+        <material name="grey_yellow">
+          <color rgba="0.7 0.7 0.2 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.7 0.6 0.025" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="platform_base_operation_surface_joint" type="fixed">
+      <parent link="platform_base" />
+      <child link = "operation_surface" />
+      <origin xyz="0.0 
+                  ${-(platform_length / 2) - width + (0.6 / 2)} 
+                  ${platform_lift + (thickness * 2) + platform_height + 0.025}" 
+              rpy="0.0 0.0 0.0" />
+    </joint>
+    <!-- Individual link colouring still needed in Gazebo 2.x -->
+    <gazebo reference="operation_surface"><material>Gazebo/Wood</material></gazebo>
+
+    <link name="robot_install_plate">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${0.15 / 2}" length="0.015"/>
+        </geometry>
+        <material name="dark_black">
+          <color rgba="0.1 0.1 0.1 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${0.15 / 2}" length="0.015"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="platform_base_robot_install_plate_joint" type="fixed">
+      <parent link="beam_support_robot_top" />
+      <child link = "robot_install_plate" />
+      <origin xyz="0.0 
+                  0.0 
+                  ${0.015 / 2 + 0.15 / 2}" 
+              rpy="0.0 0.0 0.0" />
+    </joint>
+    <!-- Individual link colouring still needed in Gazebo 2.x -->
+    <gazebo reference="robot_install_plate"><material>Gazebo/FlatBlack</material></gazebo>
+  </xacro:macro>
+
+</robot>

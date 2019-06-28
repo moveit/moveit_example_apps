@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!-- BSD 3-Clause License
+
+Copyright (c) 2019, Intel Corporation
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
+
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur5_hitbot_with_ilc_platform" >
+  
+  <!-- common stuff -->
+  <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
+
+  <!-- ur5 -->
+  <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
+  <xacro:ur5_robot prefix="" joint_limited="false"/>
+
+  <!-- hand -->
+  <xacro:include filename="$(find random_pick)/urdf/hitbot/hitbot.urdf.xacro" />
+
+  <!-- world link -->
+  <link name="world" />
+
+  <!-- platform-->
+  <xacro:include filename="$(find random_pick)/urdf/ilc_platform/ilc_platform.urdf.xacro" />
+  <xacro:platform platform_height="0.32" 
+                  platform_width="0.7"  
+                  platform_length="0.98"
+                  connected_to="world"
+                  xyz="0 0 0"
+                  rpy="0 0 0"
+                  up_beam="false"
+                  fence_left_dist="0.5"
+                  fence_right_dist="1.0"
+                  fence_front_dist="0.8"
+                  fence_back_dist="0.6"
+                  fence_top_height="1.75"
+                  fence_transparent="0.1"/>
+
+  <joint name="platform_base_link_joint" type="fixed">
+    <parent link="robot_install_plate" />
+    <child link = "base_link" />
+    <origin xyz="0.0 0.0 ${0.015 / 2}" rpy="0.0 0.0 ${pi}" />
+  </joint>
+
+  <joint name="tool0_hitbot_joint" type="fixed">
+    <parent link="tool0" />
+    <child link = "hitbot_base" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/4}" />
+  </joint>
+
+</robot>
