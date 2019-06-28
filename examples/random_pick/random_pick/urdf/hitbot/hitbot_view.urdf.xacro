@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="hitbot" >
+
+  <!-- hotbot -->
+  <xacro:include filename="$(find hitbot_description)/urdf/hitbot.urdf.xacro" />
+
+  <gazebo>
+    <plugin name="ros_control" filename="libgazebo_ros_control.so">
+    </plugin>
+  </gazebo>
+
+  <!-- world link -->
+  <link name="world" />
+  <joint name="world_hitbot_joint" type="fixed">
+    <parent link="world" />
+    <child link = "hitbot_base" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
+
+</robot>
