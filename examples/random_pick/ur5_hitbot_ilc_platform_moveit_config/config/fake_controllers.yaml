@@ -1,0 +1,16 @@
+controller_list:
+  - name: fake_ur5_arm_controller
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+  - name: fake_hand_controller
+    joints:
+      - hitbot_base_finger0_joint
+      - hitbot_base_finger1_joint
+initial:
+  - group: ur5_arm
+    pose:  home
