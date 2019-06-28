@@ -1,0 +1,27 @@
+<launch>
+  <!-- By default, bring up rviz -->
+  <arg name="rviz" default="true"/>
+
+  <!-- By default, using simulated data -->
+  <arg name="sim" default="true"/>
+
+  <arg name="debug" default="false" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+
+  <include file="$(find ur5_hitbot_ilc_platform_moveit_config)/launch/demo.launch">
+    <arg name="rviz" value="$(arg rviz)"/>
+  </include>
+
+  <include file="$(find random_pick)/launch/demo/camera.launch">
+    <arg name="sim" value="$(arg sim)"/>
+  </include>
+
+  <node launch-prefix="$(arg launch_prefix)" pkg="random_pick" type="random_pick" name="random_pick"/>
+
+  <include file="$(find random_pick)/launch/demo/gpd.launch">
+    <arg name="device" value="0"/>
+    <arg name="plane_remove" value="true"/>
+  </include>
+
+</launch>
