@@ -14,6 +14,7 @@ notifications:
 env:
   global:
     - ROS_DISTRO=melodic
+    - UPSTREAM_WORKSPACE=moveit_example_apps.rosinstall
   matrix:
     - TEST=clang-format,catkin_lint
     - DOCKER_IMAGE=moveit/moveit:master-source
