@@ -14,6 +14,8 @@ env:
   global:
     - ROS_DISTRO=melodic
     - UPSTREAM_WORKSPACE=https://raw.githubusercontent.com/ros-planning/moveit/$ROS_DISTRO-devel/moveit.rosinstall
+    - TEST_BLACKLIST="moveit_ros_perception"
+    - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-function"
   matrix:
     - DOCKER_IMAGE=moveit/moveit:master-source   TEST=clang-format,catkin_lint
     - DOCKER_IMAGE=moveit/moveit:master-source
