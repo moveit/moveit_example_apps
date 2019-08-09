@@ -30,7 +30,7 @@ before_install:
   - gem install html-proofer
 
 before_script:
-  - git clone -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
+  - git clone -q --depth=1 -b postpone-early-tests https://github.com/rhaschke/moveit_ci.git .moveit_ci
 script:
   - .moveit_ci/travis.sh
   - cd tutorials
