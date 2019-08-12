@@ -14,10 +14,13 @@ notifications:
 env:
   global:
     - ROS_DISTRO=melodic
-    - UPSTREAM_WORKSPACE=.rosinstall/random_pick/random_pick.rosinstall
   matrix:
     - TEST=clang-format,catkin_lint
-    - DOCKER_IMAGE=moveit/moveit:master-source   BEFORE_SCRIPT="source moveit_example_apps/.travis/random_pick/before_script.sh" 
+      UPSTREAM_WORKSPACE=.rosinstall/random_pick/random_pick.rosinstall
+
+    - DOCKER_IMAGE=xiaotaoqi/moveit_example_apps:random_pick
+      BEFORE_SCRIPT="source moveit_example_apps/.travis/random_pick/before_script.sh"
+      UPSTREAM_WORKSPACE=.rosinstall/random_pick/random_pick.rosinstall
 
 before_install: 
   - sudo -E sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
