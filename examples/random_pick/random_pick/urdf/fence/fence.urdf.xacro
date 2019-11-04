@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!-- BSD 3-Clause License
+
+Copyright (c) 2019, Intel Corporation
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
+
+<robot xmlns:xacro="http://wili.ros.org/xacro" name="fence">
+  
+  <!-- fence macro -->
+  <xacro:macro name="fence" params="prefix:=''
+                                    connected_to='' 
+                                    xyz:='0 0 0' 
+                                    rpy:='0 0 0'
+                                    color='1.0 0.5 0.5 0.1' 
+                                    x='0.0' 
+                                    y='0.0' 
+                                    z='0.0'">
+    <link name="fence_${prefix}">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${x} ${y} ${z}" />
+        </geometry>
+        <material name="grey_pinck">
+          <color rgba="${color}"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${x} ${y} ${z}" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${connected_to}_fence_${prefix}_joint" type="fixed">
+      <parent link="${connected_to}" />
+      <child link = "fence_${prefix}" />
+      <origin xyz="${xyz}" 
+              rpy="${rpy}" />
+    </joint>
+    <!-- Individual link colouring still needed in Gazebo 2.x -->
+    <!-- 
+      Need to edit /usr/share/gazebo-X/media/materials/scripts/gazebo.material:
+
+        material Gazebo/GreyTransparent
+        {
+          technique
+          {
+            pass
+            {
+              scene_blend alpha_blend
+              depth_write off
+
+              ambient 0.5 0.5 0.5 0.1
+              diffuse 0.5 0.5 0.5 0.1
+
+              texture_unit
+              {
+                colour_op_ex source1 src_current src_current 0 1 0
+                alpha_op_ex source1 src_manual src_current 0.5
+              }
+            }
+          }
+        } 
+    -->
+    <gazebo reference="fence_${prefix}"><material>Gazebo/GreyTransparent</material></gazebo>
+    <!-- <gazebo reference="fence_${prefix}">
+      <material>
+        <script>
+          <name>Gazebo/GreyTransparent</name>
+          <uri>file://materials/gazebo.material</uri>
+        </script>
+      </material>
+    </gazebo> -->
+
+  </xacro:macro>
+
+</robot>
