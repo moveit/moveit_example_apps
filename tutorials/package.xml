@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>moveit_app_tutorials</name>
+  <version>0.1.0</version>
+  <description>Instructions for running the industrial robot applications developed on MoveIt</description>
+  <license>BSD</license>
+
+  <author email="sharron.liu@intel.com">Sharron Liu</author>
+  <author email="yu.yan@intel.com">Yu Yan</author>
+
+  <maintainer email="sharron.liu@intel.com">Sharron Liu</maintainer>
+  <maintainer email="yu.yan@intel.com">Yu Yan</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>python-catkin-pkg</build_depend>
+
+  <export>
+    <rosdoc config="rosdoc.yaml" />
+  </export>
+
+</package>
