@@ -4,16 +4,13 @@ This project demonstrates advanced applications for using MoveIt with full robot
 
 ## Applications
 
-| Application Name | Documentation          | Docker |
-| ---------------- | -----------------------| ------ |
-| Random Pick      | [random_pick_tutorial] | WIP    |
+| Application Name | Documentation          | Docker                                     |
+| ---------------- | -----------------------| ------------------------------------------ |
+| Random Pick      | [random_pick_tutorial] | [moveit/moveit_example_apps:random_pick]() |
 
 [random_pick_tutorial]: https://roboticsyy.github.io/moveit_example_apps/doc/random_pick/random_pick.html
 
 ## Continuous Integration
-
-* [ ] Enable an initial CI by using moveit_ci
-* [ ] Develop modular CI for easily adding new app in a general way
 
 [![Build Status](https://travis-ci.org/ros-planning/moveit_example_apps.svg?branch=master)](https://travis-ci.org/ros-planning/moveit_example_apps)
 
@@ -74,3 +71,13 @@ moveit_example_apps/tutorials/
 ├── CMakeLists.txt
 └── package.xml
 ```
+
+### CI Test
+
+In order to guarantee a successful compilation and running at others' side, it is necessary to make the application continuously tested. The application contributor can consider providing the following components as what `random_pick` did to enable moveit_ci to the application:
+
+- `.docker/random_pick/Dockerfile`: for setting up the dependencies of external libraries, which overlay on moveit/moveit:master-source.
+- `.rosinstall/random_pick/random_pick.rosinstall`: for the source dependencies required to be built in the catkin workspace.
+- `.travis/random_pick/before_script.sh`: for setting up the environment variables and directory path of dependencies in the docker container.
+- A custom docker image, built from the docker file. Perhaps this image can be tagged as `moveit/moveit_example_apps:random_pick`.
+
