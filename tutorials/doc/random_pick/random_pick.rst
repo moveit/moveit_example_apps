@@ -17,11 +17,11 @@ Watch this `demo_video`_ to see the output of this application.
 
 .. _demo_video: https://www.youtube.com/embed/b4EPvHdidOA?rel=0
 
-.. _OpenVINO GPD: https://github.com/atenpas/gpd/blob/master/tutorials/tutorial_openvino.md
+.. _OpenVINO GPD: https://github.com/sharronliu/gpd/blob/master/tutorials/tutorial_openvino.md
 
 .. _Hand-Eye Calibration: https://github.com/crigroup/handeye
 
-.. _Grasp Pose: https://github.com/atenpas/gpd/blob/master/msg/GraspConfig.msg
+.. _Grasp Pose: https://github.com/sharronliu/gpd/blob/libgpd/msg/GraspConfig.msg
 
 .. _moveit_msgs Grasp: http://docs.ros.org/api/moveit_msgs/html/msg/Grasp.html
 
@@ -80,7 +80,7 @@ the MoveIt configures and SRDF files, and ROS driver for the robot control.
 
 .. _Grasp Pose Detection: https://github.com/sharronliu/gpd/tree/libgpd
 
-.. _OpenVINO: https://github.com/atenpas/gpd/blob/master/tutorials/tutorial_openvino.md
+.. _OpenVINO: https://github.com/sharronliu/gpd/blob/master/tutorials/tutorial_openvino.md
 
 Download and Build the Application
 ----------------------------------
