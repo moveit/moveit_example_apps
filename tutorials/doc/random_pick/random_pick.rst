@@ -119,7 +119,7 @@ Launch the Application with Fake Control and Recorded PointCloud
 
 .. code-block:: bash
 
-  rosrun --prefix 'gdb -ex run --args' random_pick random_pick
+  roslaunch random_pick random_pick.launch
 
 - Launch the OpenVINO grasp detection
 
@@ -148,7 +148,7 @@ Launch the Application with Real Robot and Camera
 
 .. code-block:: bash
 
-  rosrun --prefix 'gdb -ex run --args' random_pick random_pick
+  roslaunch random_pick random_pick.launch
 
 - Launch the OpenVINO grasp detection
 
@@ -214,8 +214,9 @@ Customization Notes
 
 Troubles Shooting
 -----------------
-* MoveIt pick() motion planning failed with IK. This's a known issue also observed in the
-  `pick_place app <https://github.com/ros-planning/moveit_tutorials/tree/melodic-devel/doc/pick_place>`_ of MoveIt Tutorial.
+* MoveIt pick() motion planning has a known Inverse Kinematics issue also observed in the
+  `pick_place app <https://github.com/ros-planning/moveit_tutorials/tree/melodic-devel/doc/pick_place>`_ of MoveIt Tutorial,
+  which may result in IK failure or uncomfortable IK result.
   We reported the issue as `#1278 <https://github.com/ros-planning/moveit/issues/1278>`_ and provided a workaround.
   Try rebuild moveit_core with this workaround.
 

@@ -1,0 +1,14 @@
+<launch>
+  <arg name="debug" default="true" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+
+  <node launch-prefix="$(arg launch_prefix)" pkg="random_pick" type="random_pick" 
+        name="random_pick" output="screen">
+
+    <rosparam command="load" file="$(find random_pick)/launch/demo/random_pick.yaml" />
+
+  </node>
+
+
+</launch>

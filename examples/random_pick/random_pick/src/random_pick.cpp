@@ -54,45 +54,24 @@
 static std::mutex m_;
 static bool isGrasping = false;
 
-static const char target_frame_id[] = "base";
-/* place position in the target_frame_id*/
-static std::vector<double> place_position = { -0.45, -0.30, 0.25 };
-/* place position in joint values*/
-static std::vector<double> joint_values_place = { 0.3857, -1.3737, 1.8270, -2.0249, -1.5708, 1.9569 };
-/* pre-pick position in joint values*/
-static std::vector<double> joint_values_pick = { 1.3067, -1.3066, 1.4736, -1.7380, -1.5708, 0 };
+/* For the meaning of the following parameters, please refer to "random_pick/launch/demo/random_pick.yaml" */
+static std::string target_frame_id;
+static std::vector<double> place_position;
+static std::vector<double> joint_values_place;
+static std::vector<double> joint_values_pick;
+static std::vector<std::string> finger_joint_names;
+static std::vector<double> finger_positions_open;
+static std::vector<double> finger_positions_close;
+static double approach_distance;
+static double eef_yaw_offset;
+static double eef_offset;
+static std::vector<double> boundry;
+static double object_height_min;
+static float kThresholdScore;
+static tf2::Vector3 grasp_approach;
+static double approach_deviation;
+static std::vector<double> grasp_position_offset;
 
-/* gripper parameters: */
-static std::vector<std::string> finger_joint_names = { "hitbot_base_finger0_joint", "hitbot_base_finger1_joint" };
-static std::vector<double> finger_positions_open = { -0.01, 0.01 };
-static std::vector<double> finger_positions_close = { 0.0, 0.0 };
-static double approach_distance = 0.1;
-/* end-effector yaw offset*/
-static double eef_yaw_offset = M_PI / 4;
-/* offset from the gripper base (finger root) to the parent link of eef (end of
- * robot arm)*/
-static double eef_offset = 0.154;
-
-/* work table parameters: */
-/* workspace boundy, described as a cube {x_min, x_max, y_min, y_max, z_min,
- * z_max}
- * in metres in the target_frame_id*/
-static std::vector<double> boundry = { -0.3, 0.1, -0.7, -0.35, -0.15, 0.05 };
-/* minimum height in metres (altitude above the work table) of object to grasp*/
-static double object_height_min = 0.028;
-
-/* grasp parameters*/
-/* minimum score*/
-static const float kThresholdScore = 1;
-/* expected grasp approach direction*/
-static tf2::Vector3 grasp_approach(0, 0, -1);
-/* maximum approach deviation*/
-static double approach_deviation = M_PI / 9;
-/* grasp position offset introduced by the system (e.g. camera, hand-eye
- * calibration, etc.)
- * {x_offset, y_offset} in metres in the target_frame_id*/
-static std::vector<double> grasp_position_offset = { 0.006, 0.003 };
-/* grasp candidates*/
 static std::vector<std::pair<moveit_msgs::Grasp, geometry_msgs::Point>> grasp_candidates;
 
 void openGripper(trajectory_msgs::JointTrajectory& posture)
@@ -331,7 +310,7 @@ void gpd_cb(const gpd::GraspConfigList::ConstPtr& msg)
     double ang = tf2::tf2Angle(grasp_approach, approach);
     if (std::isnan(ang) || ang < -approach_deviation || ang > approach_deviation)
     {
-      ROS_INFO("skipping deviation approach");
+      ROS_INFO("skipping deviation approach, angle: %f, deviation: %f", ang, approach_deviation);
       continue;
     }
 
@@ -415,10 +394,31 @@ int main(int argc, char** argv)
 
   // Start the program
   ros::init(argc, argv, "random_pick");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
+  // Init parameters
+  nh.getParam("target_frame_id", target_frame_id);
+  nh.getParam("place_position", place_position);
+  nh.getParam("joint_values_place", joint_values_place);
+  nh.getParam("joint_values_pick", joint_values_pick);
+  nh.getParam("finger_joint_names", finger_joint_names);
+  nh.getParam("finger_positions_open", finger_positions_open);
+  nh.getParam("finger_positions_close", finger_positions_close);
+  nh.getParam("approach_distance", approach_distance);
+  nh.getParam("eef_yaw_offset", eef_yaw_offset);
+  nh.getParam("eef_offset", eef_offset);
+  nh.getParam("boundry", boundry);
+  nh.getParam("object_height_min", object_height_min);
+  nh.getParam("kThresholdScore", kThresholdScore);
+  std::vector<double> approach_vector;
+  nh.getParam("grasp_approach", approach_vector);
+  grasp_approach = tf2::Vector3(approach_vector[0], approach_vector[1], approach_vector[2]);
+  nh.getParam("approach_deviation", approach_deviation);
+  nh.getParam("grasp_position_offset", grasp_position_offset);
+
+  // Create MoveGroupInterface and PlanningSceneInterface
   ros::WallDuration(1.0).sleep();
   moveit::planning_interface::MoveGroupInterface group("ur5_arm");
   group.setPlanningTime(45.0);
