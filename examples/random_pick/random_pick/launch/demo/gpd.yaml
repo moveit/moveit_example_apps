@@ -1,0 +1,51 @@
+# If sequential importance sampling is used (default: false)
+use_importance_sampling: false
+
+# What type of point cloud is used and what ROS topic it comes from
+cloud_type: 0 # 0: PointCloud2, 1: CloudSized, 2: CloudIndexed, 3: CloudSamples
+cloud_topic: "/camera/depth_registered/points"
+  
+# (optional) The ROS topic that the samples come from (default: an empty string)
+samples_topic: ""
+
+# Plotting parameters
+plot_normals: false
+plot_samples: false
+plot_candidates: false
+plot_filtered_grasps: false
+plot_valid_grasps: false
+plot_clusters: false
+plot_selected_grasps: false
+rviz_topic: grasps_rviz
+  
+# Preprocessing of point cloud
+voxelize: true
+remove_outliers: false
+workspace: [-1, 1, -1, 1, -1, 1]
+camera_position: [0, 0, 0]
+          
+# General parameters
+num_samples: 100
+num_threads: 4
+
+# Parameters for local grasp candidate search
+nn_radius: 0.01
+num_orientations: 8 # Number of orientations to consider
+  
+# Filtering of grasp candidates
+filter_grasps: false # on workspace and robot hand aperture
+workspace_grasps: [0.55, 1.0, -0.41, 0.03, -0.29, 1.0]
+filter_half_antipodal: false # on half antipodal
+  
+# Grasp image creation
+create_image_batches: false # creates grasp images in batches (less memory usage)
+remove_plane_before_image_calculation: false # removes table plane from point cloud to speed up shadow computations
+  
+# Clustering of grasps
+min_inliers: 1
+
+# Grasp selection
+min_score_diff: 0
+min_aperture: 0.029
+max_aperture: 0.072
+num_selected: 5

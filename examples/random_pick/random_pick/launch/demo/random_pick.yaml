@@ -1,0 +1,35 @@
+target_frame_id: "base"
+# place position in the target_frame_id
+place_position: [-0.45, -0.30, 0.25]
+# place position in joint values
+joint_values_place: [0.3857, -1.3737, 1.8270, -2.0249, -1.5708, 1.9569]
+# pre-pick position in joint values
+joint_values_pick: [1.3067, -1.3066, 1.4736, -1.7380, -1.5708, 0]
+
+# gripper parameters
+finger_joint_names: ["hitbot_base_finger0_joint", "hitbot_base_finger1_joint"]
+finger_positions_open: [-0.01, 0.01]
+finger_positions_close: [0.0, 0.0]
+approach_distance: 0.1
+# end-effector yaw offset
+eef_yaw_offset: 0.7853
+# offset from the gripper base (finger root) to the parent link of eef (end of robot arm)
+eef_offset: 0.154 # M_PI / 4
+
+# work table parameters:
+# workspace boundy, described as a cube {x_min, x_max, y_min, y_max, z_min, z_max}
+# in metres in the target_frame_id
+boundry: [-0.3, 0.1, -0.7, -0.35, -0.15, 0.05]
+# minimum height in metres (altitude above the work table) of object to grasp
+object_height_min: 0.028
+
+# grasp parameters
+# minimum score
+kThresholdScore: 1.0
+# expected grasp approach direction
+grasp_approach: [0.0, 0.0, -1.0]
+# maximum approach deviation
+approach_deviation: 0.5235 # M_PI / 9
+# grasp position offset introduced by the system (e.g. camera, hand-eye calibration, etc.)
+# {x_offset, y_offset} in metres in the target_frame_id
+grasp_position_offset: [0.006, 0.003]

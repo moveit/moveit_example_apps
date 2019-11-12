@@ -48,7 +48,7 @@ Follow `Cmake Build instructions <http://caffe.berkeleyvision.org/installation.h
 
 Install OpenVINO
 ----------------
-Follow this tutorial `Install OpenVINO toolkit <https://github.com/atenpas/gpd/blob/master/tutorials/tutorial_openvino.md#1-install-openvino-toolkit>`_.
+Follow this tutorial `Install OpenVINO toolkit <https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html>`_.
 
 Install Grasp Pose Generator (GPG)
 ----------------------------------
@@ -93,13 +93,20 @@ Clone the `GPD <https://github.com/atenpas/gpd>`_ repository into some folder:
     HINTS
     ${Caffe_DIR}/lib)
 
-**To build GPD with OpenVINO**, follow `this <https://github.com/atenpas/gpd/blob/master/tutorials/tutorial_openvino.md#3-build-gpd-with-openvino>`_ tutorial.
+**To build GPD with OpenVINO**, follow `this <https://github.com/sharronliu/gpd/blob/master/tutorials/tutorial_openvino.md>`_ tutorial.
 
 Build GPD:
 
 .. code-block:: bash
 
    cd <location_of_your_workspace>
+
+   # If Caffe is used
+   catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release -DUSE_CAFFE=ON -DUSE_OPENVINO=OFF
+
+   # If OpenVINO is used
+   catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release -DUSE_CAFFE=OFF -DUSE_OPENVINO=ON
+
    catkin build
 
 Verify GPD installation by running the `GPD Tutorials <https://github.com/atenpas/gpd#6-tutorials>`_

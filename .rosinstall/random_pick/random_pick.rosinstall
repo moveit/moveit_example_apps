@@ -1,0 +1,16 @@
+- git:
+    local-name: industrial_core
+    uri: https://github.com/ros-industrial/industrial_core.git
+    version: kinetic-devel
+- git:
+    local-name: universal_robot
+    uri: https://github.com/ros-industrial/universal_robot.git
+    version: kinetic-devel
+- git:
+    local-name: ur_modern_driver
+    uri: https://github.com/ros-industrial/ur_modern_driver.git
+    version: kinetic-devel
+- git:
+    local-name: gpd
+    uri: https://github.com/sharronliu/gpd.git
+    version: libgpd

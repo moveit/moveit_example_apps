@@ -17,11 +17,11 @@ Watch this `demo_video`_ to see the output of this application.
 
 .. _demo_video: https://www.youtube.com/embed/b4EPvHdidOA?rel=0
 
-.. _OpenVINO GPD: https://github.com/atenpas/gpd/blob/master/tutorials/tutorial_openvino.md
+.. _OpenVINO GPD: https://github.com/sharronliu/gpd/blob/master/tutorials/tutorial_openvino.md
 
 .. _Hand-Eye Calibration: https://github.com/crigroup/handeye
 
-.. _Grasp Pose: https://github.com/atenpas/gpd/blob/master/msg/GraspConfig.msg
+.. _Grasp Pose: https://github.com/sharronliu/gpd/blob/libgpd/msg/GraspConfig.msg
 
 .. _moveit_msgs Grasp: http://docs.ros.org/api/moveit_msgs/html/msg/Grasp.html
 
@@ -80,7 +80,7 @@ the MoveIt configures and SRDF files, and ROS driver for the robot control.
 
 .. _Grasp Pose Detection: https://github.com/sharronliu/gpd/tree/libgpd
 
-.. _OpenVINO: https://github.com/atenpas/gpd/blob/master/tutorials/tutorial_openvino.md
+.. _OpenVINO: https://github.com/sharronliu/gpd/blob/master/tutorials/tutorial_openvino.md
 
 Download and Build the Application
 ----------------------------------
@@ -119,7 +119,7 @@ Launch the Application with Fake Control and Recorded PointCloud
 
 .. code-block:: bash
 
-  rosrun --prefix 'gdb -ex run --args' random_pick random_pick
+  roslaunch random_pick random_pick.launch
 
 - Launch the OpenVINO grasp detection
 
@@ -148,7 +148,7 @@ Launch the Application with Real Robot and Camera
 
 .. code-block:: bash
 
-  rosrun --prefix 'gdb -ex run --args' random_pick random_pick
+  roslaunch random_pick random_pick.launch
 
 - Launch the OpenVINO grasp detection
 
@@ -214,8 +214,9 @@ Customization Notes
 
 Troubles Shooting
 -----------------
-* MoveIt pick() motion planning failed with IK. This's a known issue also observed in the
-  `pick_place app <https://github.com/ros-planning/moveit_tutorials/tree/melodic-devel/doc/pick_place>`_ of MoveIt Tutorial.
+* MoveIt pick() motion planning has a known Inverse Kinematics issue also observed in the
+  `pick_place app <https://github.com/ros-planning/moveit_tutorials/tree/melodic-devel/doc/pick_place>`_ of MoveIt Tutorial,
+  which may result in IK failure or uncomfortable IK result.
   We reported the issue as `#1278 <https://github.com/ros-planning/moveit/issues/1278>`_ and provided a workaround.
   Try rebuild moveit_core with this workaround.
 

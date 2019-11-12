@@ -1,0 +1,19 @@
+<launch>
+  <arg name="sim" default="false"/>
+  
+  <group if="$(arg sim)">
+    <remap from="/cloud_pcd" to="/camera/depth_registered/points"/>
+
+    <node pkg="pcl_ros" type="pcd_to_pointcloud" name="pcl_publisher" 
+          args="$(find random_pick)/data/random_pick.pcd 0.1 _frame_id:=/camera_color_optical_frame"/>
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="camera_link_broadcaster" 
+          args="-0.0 0.015 -0.0 -0.501 0.500 -0.495 0.504 camera_link camera_color_optical_frame" /> 
+  </group>
+
+  <group unless="$(arg sim)">
+    <include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
+  </group>
+
+  <include file="$(find random_pick)/launch/demo/camera_robot.launch"/>
+</launch>
